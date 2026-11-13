@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tento týden ve škole · ERAZIM Polná</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* =========================================================================
+   NASTAVENÍ – tohle je jediné místo, které je potřeba měnit
+   ========================================================================= */
+</style>
+<script>
+/* 1) Adresa Google Apps Scriptu (viz README). Když je prázdná, stránka běží
+      v DEMO režimu a vše ukládá jen do tohoto prohlížeče. */
+const SCRIPT_URL = "";
+
+/* 2) PIN pro učitelský pohled v DEMO režimu (skutečný PIN je v Apps Scriptu). */
+const DEMO_PIN = "1234";
+
+/* 3) Lekce na tento týden. Každý týden stačí přepsat tenhle seznam.
+      den = datum (RRRR-MM-DD), blok = řádek z rozvrhu, popis je nepovinný. */
+const TYDEN = {
+  od: "2026-11-09",
+  do: "2026-11-13",
+  lekce: [
+    { den: "2026-11-09", blok: "Digitální svět", nazev: "Využití Web of Science", ucitel: "Zdeněk Fišer", kody: ["KDI-DAT-000-ZV9-001"], popis: "" },
+    { den: "2026-11-10", blok: "Digitální svět", nazev: "Digitální detektivové – tajemství jedniček a nul – pixelové obrázky", ucitel: "Lucie Gregorová", kody: ["INF-INF-003-ZV5-007", "INF-INF-003-ZV9-010"], popis: "" },
+    { den: "2026-11-12", blok: "Čtvrtek odpoledne", nazev: "Významné ženy ve světě mužů", ucitel: "Martina Prchalová", kody: ["CAS-DEJ-001-ZV9-011"], popis: "" },
+    { den: "2026-11-12", blok: "Čtvrtek odpoledne", nazev: "Nákupní výzva: Jak vyjít s rozpočtem?", ucitel: "Petra Divišová", kody: ["ZGM-MOD-000-ZV3-001", "ZGM-MUV-000-ZV3-001", "ZGM-POM-000-ZV3-001"], popis: "" },
+    { den: "2026-11-13", blok: "Digitální svět", nazev: "Canva Design Challenge: Vytvoř vlastní logo", ucitel: "Jitka Švengrová Breindlová", kody: ["KDI-TDO-000-ZV5-001", "KDI-TDO-000-ZV9-001"], popis: "" },
+    { den: "2026-11-13", blok: "Digitální svět", nazev: "Basketbal", ucitel: "Zdeněk Fišer", kody: ["CZB-TEV-002-ZV5-008"], popis: "" },
+    { den: "2026-11-13", blok: "Digitální svět", nazev: "Tvorba webové hry", ucitel: "Zdeněk Fišer", kody: ["INF-INF-001-ZV5-002"], popis: "" }
+  ]
+};
+</script>
+<style>
+:root{
+  --bg:#fff8ef; --ink:#2b2340; --muted:#6f6787; --card:#fff; --line:#efe4d6;
+  --r1:#ff5d5d; --r2:#ff9f40; --r3:#ffd23f; --r4:#3ecf8e; --r5:#3fa7ff; --r6:#8b5cf6;
+  --radius:22px; --shadow:0 6px 0 rgba(43,35,64,.08), 0 12px 30px rgba(43,35,64,.08);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);
+  font-weight:700;min-height:100vh;padding:env(safe-area-inset-top) env(safe-area-inset-right) 40px env(safe-area-inset-left)}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+.rainbow{height:10px;background:linear-gradient(90deg,var(--r1),var(--r2),var(--r3),var(--r4),var(--r5),var(--r6))}
+.wrap{max-width:1150px;margin:0 auto;padding:0 18px}
+header.top{padding:22px 0 8px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.org{font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800}
+h1{font-size:clamp(28px,5vw,44px);margin:2px 0 0;font-weight:900;line-height:1.05}
+h1 .grad{background:linear-gradient(90deg,var(--r1),var(--r2) 30%,var(--r4) 60%,var(--r5),var(--r6));-webkit-background-clip:text;background-clip:text;color:transparent}
+.week{color:var(--muted);font-size:18px;margin-top:6px}
+.me{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:999px;padding:6px 8px 6px 6px;box-shadow:var(--shadow)}
+.me img{width:48px;height:48px;border-radius:50%;border:3px solid var(--r3);background:#fff}
+.me .nm{font-weight:900;font-size:18px;padding-right:4px}
+.btn{border:0;border-radius:999px;padding:12px 20px;font-weight:900;font-size:16px;background:var(--ink);color:#fff;
+  box-shadow:0 4px 0 rgba(0,0,0,.25);transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.btn.ghost{background:#f1ebff;color:var(--r6);box-shadow:none;padding:8px 14px;font-size:14px}
+.btn.big{font-size:20px;padding:16px 28px;background:linear-gradient(90deg,var(--r5),var(--r6))}
+.btn.green{background:var(--r4)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.hidden{display:none!important}
+
+/* ---------- vstup: avatar ---------- */
+.enter{max-width:760px;margin:30px auto 0;background:var(--card);border-radius:30px;box-shadow:var(--shadow);padding:26px}
+.enter h2{margin:0 0 4px;font-size:30px;font-weight:900}
+.enter p.sub{margin:0 0 18px;color:var(--muted)}
+.studio{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:start}
+@media (max-width:680px){.studio{grid-template-columns:1fr;justify-items:center}}
+.canvasBox{position:relative;width:min(300px,82vw);aspect-ratio:1;border-radius:50%;overflow:hidden;
+  border:6px solid var(--r3);box-shadow:inset 0 0 0 3px #fff}
+#pad{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
+.tools{display:flex;flex-direction:column;gap:14px;width:100%}
+.lbl{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:900;margin-bottom:6px}
+.swatches{display:flex;flex-wrap:wrap;gap:8px}
+.sw{width:34px;height:34px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px var(--line);padding:0}
+.sw.on{box-shadow:0 0 0 3px var(--ink)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tool{border:2px solid var(--line);background:#fff;border-radius:14px;padding:8px 12px;font-weight:800}
+.tool.on{border-color:var(--ink);background:var(--ink);color:#fff}
+.dot{display:inline-block;border-radius:50%;background:currentColor;vertical-align:middle}
+input.name{width:100%;font-size:22px;font-weight:900;padding:14px 16px;border-radius:16px;border:3px solid var(--line);background:#fffdf8;outline:none}
+input.name:focus{border-color:var(--r5)}
+.enterFoot{display:flex;justify-content:flex-end;margin-top:20px;gap:10px;align-items:center}
+.hint{color:var(--muted);font-size:14px}
+
+/* ---------- týden ---------- */
+.days{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:22px}
+@media (max-width:900px){.days{grid-template-columns:1fr}}
+.day{background:rgba(255,255,255,.55);border-radius:var(--radius);padding:12px;border:2px dashed var(--line);min-height:120px}
+.day.today{background:#fff;border:3px solid var(--r5)}
+.dayHead{display:flex;align-items:baseline;justify-content:space-between;padding:2px 4px 10px}
+.dayHead b{font-size:22px;font-weight:900}
+.dayHead span{color:var(--muted)}
+.badge{background:var(--r5);color:#fff;font-size:12px;border-radius:999px;padding:2px 8px;margin-left:6px;font-weight:900;vertical-align:middle}
+.lesson{display:block;width:100%;text-align:left;border:0;border-radius:18px;padding:14px;margin-bottom:10px;
+  background:var(--card);box-shadow:var(--shadow);border-top:8px solid var(--c);transition:transform .12s}
+.lesson:hover{transform:translateY(-3px) rotate(-.4deg)}
+.lesson .blk{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--c);font-weight:900}
+.lesson .t{font-size:18px;font-weight:900;line-height:1.2;margin:4px 0 6px}
+.lesson .who{color:var(--muted);font-size:14px;font-style:italic;font-weight:700}
+.empty{color:var(--muted);text-align:center;padding:24px 6px;font-size:15px}
+.empty .e{font-size:30px;display:block}
+
+/* ---------- přání ---------- */
+.wish{margin-top:30px;background:var(--card);border-radius:30px;box-shadow:var(--shadow);padding:24px;position:relative;overflow:hidden}
+.wish:before{content:"";position:absolute;inset:0 0 auto 0;height:8px;background:linear-gradient(90deg,var(--r1),var(--r2),var(--r3),var(--r4),var(--r5),var(--r6))}
+.wish h2{margin:6px 0 4px;font-size:28px;font-weight:900}
+.wish .q{font-size:19px;font-weight:900;margin:20px 0 10px}
+.moods{display:flex;flex-wrap:wrap;gap:10px}
+.mood{border:3px solid var(--line);background:#fff;border-radius:18px;padding:10px 14px;font-weight:800;display:flex;align-items:center;gap:8px}
+.mood .em{font-size:28px;line-height:1}
+.mood.on{border-color:var(--r6);background:#f3edff}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-weight:800}
+.chip.on{background:var(--r4);border-color:var(--r4);color:#fff}
+textarea{width:100%;min-height:90px;border:3px solid var(--line);border-radius:16px;padding:12px 14px;font-size:17px;resize:vertical;background:#fffdf8;outline:none}
+textarea:focus{border-color:var(--r5)}
+.sent{background:#e8fbf2;color:#137a4b;border-radius:16px;padding:14px 16px;margin-top:14px;font-weight:900}
+
+/* ---------- modal ---------- */
+.modalBg{position:fixed;inset:0;background:rgba(43,35,64,.45);display:flex;align-items:center;justify-content:center;padding:18px;z-index:50}
+.modal{background:#fff;border-radius:28px;max-width:520px;width:100%;padding:26px;border-top:12px solid var(--c);box-shadow:0 20px 60px rgba(0,0,0,.25);animation:pop .18s ease-out}
+@keyframes pop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+.modal h3{font-size:26px;margin:6px 0 12px;font-weight:900;line-height:1.15}
+.modal .meta{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;color:var(--muted)}
+.modal .meta b{color:var(--ink)}
+.codes{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.code{font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#f4f1fa;border-radius:8px;padding:4px 8px;color:var(--muted)}
+.modal .desc{margin:14px 0 0;font-weight:600;line-height:1.5}
+
+/* ---------- učitel ---------- */
+.teacher{margin-top:24px}
+.stats{display:flex;gap:14px;flex-wrap:wrap;margin:16px 0}
+.stat{background:#fff;border-radius:20px;padding:14px 20px;box-shadow:var(--shadow)}
+.stat b{font-size:34px;font-weight:900;display:block;line-height:1}
+.stat span{color:var(--muted);font-size:14px}
+.kids{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.kid{background:#fff;border-radius:20px;padding:14px;text-align:center;box-shadow:var(--shadow)}
+.kid img{width:96px;height:96px;border-radius:50%;border:4px solid var(--r3);background:#fff}
+.kid .n{font-weight:900;font-size:18px;margin-top:6px;word-break:break-word}
+.kid .w{color:var(--muted);font-size:13px}
+.wlist{display:flex;flex-direction:column;gap:12px}
+.witem{background:#fff;border-radius:20px;padding:14px;box-shadow:var(--shadow);display:grid;grid-template-columns:56px 1fr;gap:12px}
+.witem img{width:56px;height:56px;border-radius:50%;border:3px solid var(--r3);background:#fff}
+.witem .h{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.witem .h span{color:var(--muted);font-size:13px}
+.witem p{margin:6px 0 0;font-weight:600}
+.witem .tag{display:inline-block;background:#e8fbf2;color:#137a4b;border-radius:999px;padding:2px 10px;font-size:13px;margin:6px 4px 0 0}
+.pinBox{max-width:380px;margin:40px auto;background:#fff;border-radius:26px;padding:24px;box-shadow:var(--shadow);text-align:center}
+.pinBox input{text-align:center;letter-spacing:.3em}
+.err{color:var(--r1);font-weight:900;margin-top:10px}
+.demo{background:#fff4d6;border-radius:14px;padding:10px 14px;color:#8a5a00;font-size:14px;margin-top:10px}
+footer{text-align:center;margin-top:40px;color:var(--muted);font-size:14px}
+footer a{color:var(--muted)}
+h2.sec{font-size:24px;font-weight:900;margin:28px 0 12px}
+</style>
+</head>
+<body>
+<div class="rainbow"></div>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="org">ERAZIM Polná</div>
+      <h1 id="pageTitle"><span class="grad">Tento týden</span> ve škole</h1>
+      <div class="week" id="weekLbl"></div>
+    </div>
+    <div class="me hidden" id="meBox">
+      <img id="meImg" alt="">
+      <span class="nm" id="meName"></span>
+      <button class="btn ghost" id="changeMe">změnit</button>
+    </div>
+  </header>
+
+  <!-- ============ VSTUP: nakresli si avatara ============ -->
+  <section id="enterView" class="enter hidden">
+    <h2>Ahoj! 👋 Kdo jsi?</h2>
+    <p class="sub">Nakresli si svého avatara a vymysli si jméno. Pak uvidíš, co tě tento týden čeká.</p>
+    <div class="studio">
+      <div class="canvasBox" id="canvasBox"><canvas id="pad"></canvas></div>
+      <div class="tools">
+        <div>
+          <div class="lbl">Barva</div>
+          <div class="swatches" id="colors"></div>
+        </div>
+        <div>
+          <div class="lbl">Štětec</div>
+          <div class="row" id="sizes"></div>
+        </div>
+        <div>
+          <div class="lbl">Pozadí</div>
+          <div class="swatches" id="bgs"></div>
+        </div>
+        <div class="row">
+          <button class="tool" id="eraser">🧽 Guma</button>
+          <button class="tool" id="undo">↩️ Zpět</button>
+          <button class="tool" id="clear">🗑️ Smazat vše</button>
+        </div>
+        <div>
+          <div class="lbl">Tvoje jméno</div>
+          <input class="name" id="nameIn" maxlength="24" placeholder="např. Rychlá Žirafa" autocomplete="off">
+        </div>
+      </div>
+    </div>
+    <div class="enterFoot">
+      <span class="hint" id="enterHint">Nakresli něco a napiš jméno ✏️</span>
+      <button class="btn big" id="enterBtn" disabled>Jdu dovnitř →</button>
+    </div>
+  </section>
+
+  <!-- ============ HLAVNÍ: týden + přání ============ -->
+  <main id="mainView" class="hidden">
+    <div class="days" id="days"></div>
+
+    <section class="wish">
+      <h2>A co ty? 💬</h2>
+      <div class="q">Jakou máš tento týden náladu?</div>
+      <div class="moods" id="moods"></div>
+
+      <div class="q">Na co bys měl/a chuť?</div>
+      <div class="chips" id="chips"></div>
+
+      <div class="q">Jakou lekci by sis přál/a ty?</div>
+      <textarea id="wishTxt" maxlength="500" placeholder="Třeba: Chtěl bych postavit robota, nebo natočit video…"></textarea>
+
+      <div style="display:flex;justify-content:flex-end;margin-top:14px">
+        <button class="btn green big" id="sendWish" style="background:linear-gradient(90deg,var(--r4),#1fb57a)">Poslat 🚀</button>
+      </div>
+      <div class="sent hidden" id="sentMsg">Díky! Tvoje přání dorazilo k učiteli. ⭐</div>
+    </section>
+  </main>
+
+  <!-- ============ UČITEL ============ -->
+  <section id="teacherView" class="teacher hidden">
+    <div class="pinBox" id="pinBox">
+      <h2 style="margin:0 0 10px;font-weight:900">🔒 Pro učitele</h2>
+      <input class="name" id="pinIn" type="password" inputmode="numeric" placeholder="PIN">
+      <div style="margin-top:14px"><button class="btn" id="pinBtn">Otevřít</button></div>
+      <div class="err hidden" id="pinErr"></div>
+    </div>
+    <div id="tData" class="hidden">
+      <div class="row" style="justify-content:space-between">
+        <h2 class="sec" style="margin:0">Kdo se díval za posledních 24 hodin</h2>
+        <button class="btn ghost" id="refresh">🔄 Obnovit</button>
+      </div>
+      <div class="demo hidden" id="demoNote">Běží DEMO režim – data jsou jen v tomto prohlížeči. Pro sběr dat od všech dětí vyplň v souboru <b>SCRIPT_URL</b> (viz README).</div>
+      <div class="stats" id="stats"></div>
+      <div class="kids" id="kids"></div>
+      <h2 class="sec">Přání a nálady (posledních 7 dní)</h2>
+      <div class="wlist" id="wishes"></div>
+    </div>
+  </section>
+
+  <footer>
+    <span id="footLinks"><a href="#ucitel">🔒 Učitel</a></span>
+  </footer>
+</div>
+
+<div class="modalBg hidden" id="modalBg"><div class="modal" id="modal"></div></div>
+
+<script>
+/* ===================== pomocné ===================== */
+const $ = id => document.getElementById(id);
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d }catch(e){ return d } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)) }catch(e){} }
+};
+const DNY = ["Ne","Po","Út","St","Čt","Pá","So"];
+const DNY_DL = ["neděle","pondělí","úterý","středa","čtvrtek","pátek","sobota"];
+const parseD = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d) };
+const fmtD = d => d.getDate() + "." + (d.getMonth()+1) + ".";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
+function ago(t){
+  const m = Math.round((Date.now() - new Date(t).getTime()) / 60000);
+  if (m < 2) return "před chvílí";
+  if (m < 60) return "před " + m + " min";
+  const h = Math.round(m / 60);
+  if (h < 24) return "před " + h + " h";
+  const d = Math.round(h / 24);
+  return d === 1 ? "včera" : "před " + d + " dny";
+}
+const BLOK_BARVY = { "Digitální svět": "#3fa7ff", "Čtvrtek odpoledne": "#ff9f40" };
+const EXTRA = ["#8b5cf6","#3ecf8e","#ff5d5d","#e6b800","#ec4899"];
+function blokBarva(b){
+  if (BLOK_BARVY[b]) return BLOK_BARVY[b];
+  let h = 0; for (const c of b) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return EXTRA[h % EXTRA.length];
+}
+
+/* ===================== backend (Google Apps Script nebo demo) ===================== */
+const DEMO = !SCRIPT_URL;
+const api = {
+  async send(data){
+    if (DEMO){
+      const db = store.get("erazim_demo", { deti:{}, navstevy:[], prani:[] });
+      const now = new Date().toISOString();
+      db.deti[data.id] = { id:data.id, jmeno:data.jmeno, avatar:data.avatar || db.deti[data.id]?.avatar || "" };
+      if (data.typ === "navsteva") db.navstevy.push({ cas:now, id:data.id });
+      if (data.typ === "prani") db.prani.push({ cas:now, id:data.id, nalada:data.nalada, chut:data.chut, lekce:data.lekce });
+      store.set("erazim_demo", db);
+      return { ok:true };
+    }
+    // text/plain = "jednoduchý" požadavek, Apps Script ho přijme bez CORS potíží
+    const r = await fetch(SCRIPT_URL, { method:"POST", body: JSON.stringify(data) });
+    return r.json();
+  },
+  async report(pin){
+    if (DEMO){
+      if (pin !== DEMO_PIN) return { ok:false, chyba:"Špatný PIN" };
+      const db = store.get("erazim_demo", { deti:{}, navstevy:[], prani:[] });
+      return buildReport(db);
+    }
+    const r = await fetch(SCRIPT_URL + "?pin=" + encodeURIComponent(pin));
+    return r.json();
+  }
+};
+// stejné skládání jako v Apps Scriptu (pro demo)
+function buildReport(db){
+  const now = Date.now(), d24 = now - 864e5, d7 = now - 7*864e5;
+  const per = {};
+  for (const v of db.navstevy){
+    const t = new Date(v.cas).getTime(); if (t < d24) continue;
+    const p = per[v.id] || (per[v.id] = { pocet:0, posledni:0 });
+    p.pocet++; if (t > p.posledni) p.posledni = t;
+  }
+  const deti = Object.keys(per).map(id => ({ ...(db.deti[id] || { id, jmeno:"?" }), pocet:per[id].pocet, posledni:new Date(per[id].posledni).toISOString() }))
+    .sort((a,b) => b.posledni.localeCompare(a.posledni));
+  const prani = db.prani.filter(p => new Date(p.cas).getTime() >= d7)
+    .map(p => ({ ...p, jmeno: db.deti[p.id]?.jmeno || "?", avatar: db.deti[p.id]?.avatar || "" }))
+    .sort((a,b) => b.cas.localeCompare(a.cas));
+  return { ok:true, deti, prani };
+}
+
+/* ===================== identita dítěte ===================== */
+let ja = store.get("erazim_dite", null);
+
+function logVisit(){
+  if (!ja) return;
+  const last = store.get("erazim_last_visit", 0);
+  if (Date.now() - last < 10*60*1000) return;      // max. jednou za 10 minut
+  store.set("erazim_last_visit", Date.now());
+  api.send({ typ:"navsteva", id:ja.id, jmeno:ja.jmeno, avatar:ja.avatar }).catch(()=>{});
+}
+
+/* ===================== kreslení avatara ===================== */
+const pad = $("pad"), ctx = pad.getContext("2d");
+const COLORS = ["#2b2340","#ffffff","#ff5d5d","#ff9f40","#ffd23f","#3ecf8e","#3fa7ff","#8b5cf6","#ec4899","#8b5a2b","#f5c6a5","#9ca3af"];
+const BGS = ["#fff3c4","#ffd9d9","#d6f5e6","#d9ecff","#ece3ff","#ffffff","#2b2340"];
+const SIZES = [4, 9, 18, 32];
+let color = COLORS[0], size = SIZES[1], erasing = false, bg = BGS[0], drawn = false, undoStack = [];
+
+function sizeCanvas(){
+  const r = pad.getBoundingClientRect(), dpr = Math.max(1, window.devicePixelRatio || 1);
+  const keep = pad.width ? pad.toDataURL() : null;
+  pad.width = Math.round(r.width * dpr); pad.height = Math.round(r.height * dpr);
+  ctx.setTransform(1,0,0,1,0,0); ctx.scale(pad.width / 300, pad.height / 300);  // kreslíme v souřadnicích 0–300
+  ctx.lineCap = "round"; ctx.lineJoin = "round";
+  if (keep){ const im = new Image(); im.onload = () => { ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.drawImage(im,0,0,pad.width,pad.height); ctx.restore() }; im.src = keep }
+}
+function setBg(c){ bg = c; $("canvasBox").style.background = c; renderSwatches() }
+function renderSwatches(){
+  $("colors").innerHTML = COLORS.map(c => `<button class="sw ${c===color&&!erasing?"on":""}" style="background:${c}" data-c="${c}" aria-label="barva"></button>`).join("");
+  $("bgs").innerHTML = BGS.map(c => `<button class="sw ${c===bg?"on":""}" style="background:${c}" data-b="${c}" aria-label="pozadí"></button>`).join("");
+  $("sizes").innerHTML = SIZES.map(s => `<button class="tool ${s===size?"on":""}" data-s="${s}"><span class="dot" style="width:${Math.max(6,s/1.4)}px;height:${Math.max(6,s/1.4)}px"></span></button>`).join("");
+  $("eraser").classList.toggle("on", erasing);
+}
+$("colors").onclick = e => { const c = e.target.dataset.c; if (c){ color = c; erasing = false; renderSwatches() } };
+$("bgs").onclick = e => { const c = e.target.closest("[data-b]")?.dataset.b; if (c) setBg(c) };
+$("sizes").onclick = e => { const s = e.target.closest("[data-s]")?.dataset.s; if (s){ size = +s; renderSwatches() } };
+$("eraser").onclick = () => { erasing = !erasing; renderSwatches() };
+$("undo").onclick = () => { const im = undoStack.pop(); if (im) ctx.putImageData(im, 0, 0); if (!undoStack.length) { drawn = false; checkEnter() } };
+$("clear").onclick = () => { pushUndo(); ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,pad.width,pad.height); ctx.restore(); drawn = false; checkEnter() };
+
+function pushUndo(){ try{ undoStack.push(ctx.getImageData(0,0,pad.width,pad.height)); if (undoStack.length > 25) undoStack.shift() }catch(e){} }
+let drawing = false, lastP = null;
+const pt = e => { const r = pad.getBoundingClientRect(); return { x:(e.clientX - r.left) * 300 / r.width, y:(e.clientY - r.top) * 300 / r.height } };
+function stroke(a, b){
+  ctx.globalCompositeOperation = erasing ? "destination-out" : "source-over";
+  ctx.strokeStyle = color; ctx.lineWidth = size;
+  ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x + .01, b.y + .01); ctx.stroke();
+}
+pad.addEventListener("pointerdown", e => { e.preventDefault(); pad.setPointerCapture(e.pointerId); pushUndo(); drawing = true; lastP = pt(e); stroke(lastP, lastP) });
+pad.addEventListener("pointermove", e => { if (!drawing) return; const p = pt(e); stroke(lastP, p); lastP = p });
+const endDraw = () => { if (drawing){ drawing = false; if (!erasing){ drawn = true; checkEnter() } } };
+pad.addEventListener("pointerup", endDraw); pad.addEventListener("pointercancel", endDraw);
+
+function exportAvatar(){
+  const N = 128, c = document.createElement("canvas"); c.width = c.height = N;
+  const x = c.getContext("2d");
+  x.fillStyle = bg; x.fillRect(0,0,N,N);
+  x.drawImage(pad, 0, 0, N, N);
+  return c.toDataURL("image/png");
+}
+function checkEnter(){
+  const ok = $("nameIn").value.trim().length >= 2 && drawn;
+  $("enterBtn").disabled = !ok;
+  $("enterHint").textContent = ok ? "Paráda! 🎉" : !drawn ? "Nakresli svého avatara ✏️" : "Napiš jméno (aspoň 2 písmena) ✏️";
+}
+$("nameIn").addEventListener("input", checkEnter);
+$("enterBtn").onclick = () => {
+  const jmeno = $("nameIn").value.trim().slice(0, 24);
+  ja = { id: ja?.id || uid(), jmeno, avatar: exportAvatar() };
+  store.set("erazim_dite", ja);
+  store.set("erazim_last_visit", 0);
+  logVisit();
+  route();
+};
+$("changeMe").onclick = () => { showEnter(true) };
+
+function showEnter(editing){
+  $("enterView").classList.remove("hidden"); $("mainView").classList.add("hidden"); $("meBox").classList.add("hidden");
+  renderSwatches(); setBg(bg); requestAnimationFrame(sizeCanvas);
+  if (editing && ja){
+    $("nameIn").value = ja.jmeno;
+    const im = new Image(); im.onload = () => {
+      // načte dřívějšího avatara jako podklad
+      ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,pad.width,pad.height); ctx.drawImage(im,0,0,pad.width,pad.height); ctx.restore();
+      drawn = true; checkEnter();
+    }; im.src = ja.avatar;
+  }
+  checkEnter();
+}
+
+/* ===================== týden ===================== */
+function renderWeek(){
+  const od = parseD(TYDEN.od), doo = parseD(TYDEN.do);
+  $("weekLbl").textContent = `${fmtD(od)} – ${fmtD(doo)}${doo.getFullYear()}`;
+  const todayKey = new Date().toLocaleDateString("sv-SE");
+  let html = "";
+  for (let d = new Date(od); d <= doo; d.setDate(d.getDate() + 1)){
+    if (d.getDay() === 0 || d.getDay() === 6) continue;
+    const key = d.toLocaleDateString("sv-SE");
+    const items = TYDEN.lekce.map((l,i) => ({...l, i})).filter(l => l.den === key);
+    const today = key === todayKey;
+    html += `<div class="day ${today ? "today" : ""}">
+      <div class="dayHead"><b>${DNY[d.getDay()]}${today ? '<span class="badge">DNES</span>' : ""}</b><span>${fmtD(d)}</span></div>
+      ${items.length ? items.map(l => `
+        <button class="lesson" style="--c:${blokBarva(l.blok)}" data-i="${l.i}">
+          <div class="blk">${esc(l.blok)}</div>
+          <div class="t">${esc(l.nazev)}</div>
+          <div class="who">${esc(l.ucitel)}</div>
+        </button>`).join("") : `<div class="empty"><span class="e">🌤️</span>Žádná lekce</div>`}
+    </div>`;
+  }
+  $("days").innerHTML = html;
+}
+$("days").onclick = e => { const b = e.target.closest(".lesson"); if (b) openLesson(TYDEN.lekce[+b.dataset.i]) };
+function openLesson(l){
+  const d = parseD(l.den);
+  $("modal").style.setProperty("--c", blokBarva(l.blok));
+  $("modal").innerHTML = `
+    <div class="lesson" style="box-shadow:none;padding:0;margin:0;border:0;--c:${blokBarva(l.blok)}"><div class="blk">${esc(l.blok)}</div></div>
+    <h3>${esc(l.nazev)}</h3>
+    <div class="meta">
+      <span>Kdy</span><b>${DNY_DL[d.getDay()]} ${fmtD(d)}</b>
+      <span>Kdo učí</span><b>${esc(l.ucitel)}</b>
+    </div>
+    ${l.popis ? `<p class="desc">${esc(l.popis)}</p>` : ""}
+    <div class="codes">${(l.kody||[]).map(k => `<span class="code">${esc(k)}</span>`).join("")}</div>
+    <div style="text-align:right;margin-top:18px"><button class="btn" id="closeM">Zavřít</button></div>`;
+  $("modalBg").classList.remove("hidden");
+  $("closeM").onclick = closeModal;
+}
+function closeModal(){ $("modalBg").classList.add("hidden") }
+$("modalBg").onclick = e => { if (e.target === $("modalBg")) closeModal() };
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal() });
+
+/* ===================== přání a nálada ===================== */
+const MOODS = [["🤩","Plný/á energie"],["😄","Super"],["🙂","Dobrá"],["😐","Nic moc"],["😴","Unavený/á"],["😟","Smutný/á"],["😤","Naštvaný/á"]];
+const CHUTI = ["🎨 Tvořit","💻 Programovat","🤖 Roboty","⚽ Sport","🧩 Hádanky","🔬 Pokusy","🎮 Hry","📚 Číst","🎵 Hudba","🎬 Video","🌳 Ven do přírody","🗣️ Povídat si"];
+let mood = null, chuti = new Set();
+function renderWish(){
+  $("moods").innerHTML = MOODS.map(([e,t]) => `<button class="mood ${mood===e+" "+t?"on":""}" data-m="${e} ${t}"><span class="em">${e}</span>${t}</button>`).join("");
+  $("chips").innerHTML = CHUTI.map(c => `<button class="chip ${chuti.has(c)?"on":""}" data-c="${c}">${c}</button>`).join("");
+}
+$("moods").onclick = e => { const b = e.target.closest("[data-m]"); if (b){ mood = mood === b.dataset.m ? null : b.dataset.m; renderWish() } };
+$("chips").onclick = e => { const b = e.target.closest("[data-c]"); if (b){ const c = b.dataset.c; chuti.has(c) ? chuti.delete(c) : chuti.add(c); renderWish() } };
+$("sendWish").onclick = async () => {
+  const lekce = $("wishTxt").value.trim();
+  if (!mood && !chuti.size && !lekce){ $("wishTxt").focus(); $("wishTxt").placeholder = "Vyber náladu nebo něco napiš 🙂"; return }
+  const btn = $("sendWish"); btn.disabled = true; btn.textContent = "Posílám…";
+  try{
+    await api.send({ typ:"prani", id:ja.id, jmeno:ja.jmeno, avatar:ja.avatar, nalada:mood || "", chut:[...chuti].join(", "), lekce });
+    $("sentMsg").classList.remove("hidden"); $("sentMsg").textContent = "Díky! Tvoje přání dorazilo k učiteli. ⭐";
+    $("wishTxt").value = ""; mood = null; chuti.clear(); renderWish();
+  }catch(e){
+    $("sentMsg").classList.remove("hidden"); $("sentMsg").textContent = "Hmm, nepovedlo se odeslat. Zkus to prosím za chvilku znovu.";
+  }
+  btn.disabled = false; btn.textContent = "Poslat 🚀";
+};
+
+/* ===================== učitelský pohled ===================== */
+let pinOk = sessionStorage.getItem("erazim_pin") || "";
+async function loadTeacher(pin){
+  $("pinErr").classList.add("hidden");
+  let r;
+  try{ r = await api.report(pin) }catch(e){ r = { ok:false, chyba:"Nepodařilo se spojit se skriptem." } }
+  if (!r.ok){ $("pinErr").textContent = r.chyba || "Chyba"; $("pinErr").classList.remove("hidden"); $("pinBox").classList.remove("hidden"); $("tData").classList.add("hidden"); return }
+  pinOk = pin; try{ sessionStorage.setItem("erazim_pin", pin) }catch(e){}
+  $("pinBox").classList.add("hidden"); $("tData").classList.remove("hidden");
+  $("demoNote").classList.toggle("hidden", !DEMO);
+  const visits = r.deti.reduce((s,k) => s + k.pocet, 0);
+  $("stats").innerHTML = `
+    <div class="stat"><b>${r.deti.length}</b><span>dětí za 24 h</span></div>
+    <div class="stat"><b>${visits}</b><span>návštěv za 24 h</span></div>
+    <div class="stat"><b>${r.prani.length}</b><span>přání za 7 dní</span></div>`;
+  $("kids").innerHTML = r.deti.length ? r.deti.map(k => `
+    <div class="kid">
+      ${k.avatar ? `<img src="${esc(k.avatar)}" alt="">` : `<div style="font-size:60px">🙂</div>`}
+      <div class="n">${esc(k.jmeno)}</div>
+      <div class="w">${ago(k.posledni)} · ${k.pocet}×</div>
+    </div>`).join("") : `<div class="empty"><span class="e">🦗</span>Zatím se nikdo nedíval</div>`;
+  $("wishes").innerHTML = r.prani.length ? r.prani.map(p => `
+    <div class="witem">
+      ${p.avatar ? `<img src="${esc(p.avatar)}" alt="">` : `<div style="font-size:40px">🙂</div>`}
+      <div>
+        <div class="h"><b>${esc(p.jmeno)} ${p.nalada ? "· " + esc(p.nalada) : ""}</b><span>${ago(p.cas)}</span></div>
+        ${p.chut ? p.chut.split(", ").map(c => `<span class="tag">${esc(c)}</span>`).join("") : ""}
+        ${p.lekce ? `<p>„${esc(p.lekce)}“</p>` : ""}
+      </div>
+    </div>`).join("") : `<div class="empty"><span class="e">📭</span>Zatím žádná přání</div>`;
+}
+$("pinBtn").onclick = () => loadTeacher($("pinIn").value.trim());
+$("pinIn").addEventListener("keydown", e => { if (e.key === "Enter") $("pinBtn").click() });
+$("refresh").onclick = () => loadTeacher(pinOk);
+
+/* ===================== směrování ===================== */
+function route(){
+  const teacher = location.hash === "#ucitel";
+  for (const id of ["enterView","mainView","teacherView"]) $(id).classList.add("hidden");
+  $("meBox").classList.add("hidden");
+  $("footLinks").innerHTML = teacher ? `<a href="#">← Zpět na týden</a>` : `<a href="#ucitel">🔒 Učitel</a>`;
+  if (teacher){
+    $("pageTitle").innerHTML = `<span class="grad">Přehled</span> pro učitele`;
+    $("teacherView").classList.remove("hidden");
+    if (pinOk) loadTeacher(pinOk);
+    return;
+  }
+  $("pageTitle").innerHTML = `<span class="grad">Tento týden</span> ve škole`;
+  if (!ja){ showEnter(false); return }
+  $("meImg").src = ja.avatar; $("meName").textContent = ja.jmeno; $("meBox").classList.remove("hidden");
+  $("mainView").classList.remove("hidden");
+  logVisit();
+}
+window.addEventListener("hashchange", route);
+window.addEventListener("resize", () => { if (!$("enterView").classList.contains("hidden")) sizeCanvas() });
+
+renderWeek(); renderWish(); renderSwatches(); setBg(bg); route();
+</script>
+</body>
+</html>
