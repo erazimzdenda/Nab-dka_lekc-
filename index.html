@@ -19,21 +19,45 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwBEfh65vsONjG269cNt
 /* 2) PIN pro učitelský pohled v DEMO režimu (skutečný PIN je v Apps Scriptu). */
 const DEMO_PIN = "1234";
 
-/* 3) Lekce na tento týden. Každý týden stačí přepsat tenhle seznam.
-      den = datum (RRRR-MM-DD), blok = řádek z rozvrhu, popis je nepovinný. */
-const TYDEN = {
-  od: "2026-11-09",
-  do: "2026-11-13",
-  lekce: [
-    { den: "2026-11-09", blok: "Digitální svět", nazev: "Využití Web of Science", ucitel: "Zdeněk Fišer", kody: ["KDI-DAT-000-ZV9-001"], popis: "" },
-    { den: "2026-11-10", blok: "Digitální svět", nazev: "Digitální detektivové – tajemství jedniček a nul – pixelové obrázky", ucitel: "Lucie Gregorová", kody: ["INF-INF-003-ZV5-007", "INF-INF-003-ZV9-010"], popis: "" },
-    { den: "2026-11-12", blok: "Čtvrtek odpoledne", nazev: "Významné ženy ve světě mužů", ucitel: "Martina Prchalová", kody: ["CAS-DEJ-001-ZV9-011"], popis: "" },
-    { den: "2026-11-12", blok: "Čtvrtek odpoledne", nazev: "Nákupní výzva: Jak vyjít s rozpočtem?", ucitel: "Petra Divišová", kody: ["ZGM-MOD-000-ZV3-001", "ZGM-MUV-000-ZV3-001", "ZGM-POM-000-ZV3-001"], popis: "" },
-    { den: "2026-11-13", blok: "Digitální svět", nazev: "Canva Design Challenge: Vytvoř vlastní logo", ucitel: "Jitka Švengrová Breindlová", kody: ["KDI-TDO-000-ZV5-001", "KDI-TDO-000-ZV9-001"], popis: "" },
-    { den: "2026-11-13", blok: "Digitální svět", nazev: "Basketbal", ucitel: "Zdeněk Fišer", kody: ["CZB-TEV-002-ZV5-008"], popis: "" },
-    { den: "2026-11-13", blok: "Digitální svět", nazev: "Tvorba webové hry", ucitel: "Zdeněk Fišer", kody: ["INF-INF-001-ZV5-002"], popis: "" }
-  ]
-};
+/* 3) Lekce na tento týden. Každý týden se tenhle seznam přepíše.
+      den = datum (RRRR-MM-DD), bloky = řádky z rozvrhu, popis je nepovinný. */
+const LEKCE = [
+  {"den": "2026-11-09", "nazev": "Dokončení závěsné dekorace", "ucitel": "Jitka Švengrová Breindlová", "popis": "Cíl: Žák dokončí výtvarný výrobek barevným zpracováním a volí barvy podle vlastního záměru. Aktivita: Žáci barví jednotlivé části závěsné dekorace, kombinují barvy a dolaďují její celkový vzhled.", "bloky": ["Kultura"], "kody": ["UAK-VFV-001-ZV5-001", "UAK-VFV-001-ZV9-001"], "stupne": ["1. stupeň", "2. stupeň"]},
+  {"den": "2026-11-09", "nazev": "Matematické detektivky: Hledáme čísla podle podmínek", "ucitel": "Jitka Švengrová Breindlová", "popis": "Cíl: Žák vyhledává čísla podle jedné či více podmínek, rozpoznává průnik geometrických útvarů a pracuje také s negací (např. „není v kruhu“). Aktivita: Žáci pracují s obrázkem překrývajících se geometrických útvarů – trojúhelníku, kruhu a čtverce. Podle zadaných podmínek vyhledávají odpovídající čísla. Kombinují více podmínek, určují čísla nacházející se alespoň ve dvou obrazcích a hledají čísla mimo všechny útvary. Na závěr vytvářejí vlastní hádanky pro spolužáky.", "bloky": ["Řešení problémů"], "kody": ["MAT-MAT-004-ZV5-011", "MAT-MAT-004-ZV9-014"], "stupne": ["1. stupeň", "2. stupeň"]},
+  {"den": "2026-11-09", "nazev": "Matematika - do 100", "ucitel": "Vojtěch Pažourek", "popis": "Příklady pro 1. až 3. ročník", "bloky": ["Řešení problémů"], "kody": ["ZGM-MRF-000-ZV3-001"], "stupne": ["1. stupeň"]},
+  {"den": "2026-11-09", "nazev": "Míčové hry", "ucitel": "Zdeněk Fišer", "popis": "Fotbal, basketbal, házená", "bloky": ["Komunikace"], "kody": ["CZB-TEV-002-ZV9-006"], "stupne": ["2. stupeň"]},
+  {"den": "2026-11-09", "nazev": "Schůzka PC a robotického týmu.", "ucitel": "Zdeněk Fišer", "popis": "Brainstorming nápadů a projektů.", "bloky": ["Učení a sebeřízení"], "kody": ["SBŘ-DČD-001-SŘ5-004"], "stupne": ["1. stupeň"]},
+  {"den": "2026-11-09", "nazev": "Využití Web of science", "ucitel": "Zdeněk Fišer", "popis": "Vyhledávání kvalitních zdrojů a studií - na portálu web of science.", "bloky": ["Digitální svět"], "kody": ["KDI-DAT-000-ZV9-001"], "stupne": ["2. stupeň"]},
+  {"den": "2026-11-09", "nazev": "Čtení a psaní - co už umím a v čem se chci zlepšit?", "ucitel": "Jitka Švengrová Breindlová", "popis": "Aktivita: Žáci si vyzkouší čtenářské a pisatelské úkoly podle své úrovně – od rozpoznávání písmen a skládání slabik až po čtení příběhů a tvorbu vlastních textů. Mohou konzultovat práci se spolužákem. Na závěr zhodnotí, co se jim dařilo a na čem chtějí dále pracovat.", "bloky": ["Komunikace"], "kody": ["ZGC-PVL-000-ZV3-001"], "stupne": ["1. stupeň"]},
+  {"den": "2026-11-09", "nazev": "Čtení s porozuměním podle vlastního výběru (2. stupeň)", "ucitel": "Jitka Švengrová Breindlová", "popis": "Cíl: Žák si samostatně volí téma ke čtení a ověřuje porozumění textu. Aktivita: Žáci si vyberou téma, které je zajímá, a dostanou individuálně připravený pracovní list s krátkým textem a otázkami. Text přečtou, odpovídají na otázky a na závěr zhodnotí, jak se jim při čtení dařilo.", "bloky": ["Učení a sebeřízení"], "kody": ["CSP-OSV-001-ZV9-005", "SBŘ-DČD-001-SŘ9-002"], "stupne": ["2. stupeň"]},
+  {"den": "2026-11-10", "nazev": "Digitální detektivové - tajemství jedniček a nul - pixelové obrázky", "ucitel": "Lucie Gregorová", "bloky": ["Digitální svět"], "kody": ["INF-INF-003-ZV5-007", "INF-INF-003-ZV9-010"], "stupne": ["1. stupeň", "2. stupeň"]},
+  {"den": "2026-11-10", "nazev": "Hra na ukulele", "ucitel": "Jitka Švengrová Breindlová", "popis": "Cíl: Žáci se naučí nebo zdokonalí základní techniku hry na ukulele a osvojí si jednoduché akordy. Aktivita: Žáci procvičují držení nástroje, správné brnkání a hru základních akordů, které následně využívají při hraní jednoduchých písní. Procvičují koordinaci, rytmus, soustředění a vytrvalost při učení nové dovednosti.", "bloky": ["Kultura"], "kody": ["UAK-HTD-001-ZV5-002", "UAK-HTD-001-ZV9-002"], "stupne": ["1. stupeň", "2. stupeň"]},
+  {"den": "2026-11-10", "nazev": "Německý jazyk - gramatika: členy, slovní zásoba na volné téma", "ucitel": "Michala Plšková", "bloky": ["Komunikace"], "kody": ["JJK-DCJ-001-ZV9-001"], "stupne": ["2. stupeň"]},
+  {"den": "2026-11-10", "nazev": "Pitva ryby - pohled pod povrch", "ucitel": "Petra Divišová", "popis": "Prostřednictvím pitvy skutečné ryby budeme zkoumat její vnější a vnitřní stavbu, pozorovat jednotlivé orgány a seznamovat se s jejich funkcí. Zaměříme se na anatomická přizpůsobení ryby životu ve vodním prostředí a na fungování jejího těla.", "bloky": ["Občanství a udržitelnost", "Osobnost a vztahy"], "kody": ["CJS-CJS-004-ZV5-017", "CAP-PRI-001-ZV9-003", "CAP-PRI-004-ZV9-013"], "stupne": ["1. stupeň", "2. stupeň"]},
+  {"den": "2026-11-10", "nazev": "Tělocvik - tělocvična", "ucitel": "Vojtěch Pažourek", "popis": "Frisbee.", "bloky": ["Osobnost a vztahy"], "kody": ["CZB-TEV-001-ZV5-003"], "stupne": ["1. stupeň"]},
+  {"den": "2026-11-10", "nazev": "Výletový tým (2.st.)", "ucitel": "Michala Plšková", "popis": "Plánování výletů je praktickou realizací skupinové aktivity, kdy žáci společně provádějí konkrétní činnost podle vlastních či skupinových postupů. Jde o aplikaci sebeřízeného učení v reálné situaci, kde děti aktivně participují na rozhodování a plánování.", "bloky": ["Podnikavost a práce"], "kody": ["KPP-REA-000-ZV9-001"], "stupne": ["2. stupeň"]},
+  {"den": "2026-11-10", "nazev": "Výletový tým - schůzka 1.st.", "ucitel": "Michala Plšková", "popis": "Žáci v reflexi výletů identifikují, co se jim líbilo nebo nelíbilo, a artikulují přání pro budoucí výlety. Tímto účelně vyjadřují, co by chtěli ve svém okolí (v rámci školních aktivit) změnit nebo zlepšit.", "bloky": ["Občanství a udržitelnost"], "kody": ["KOB-PCP-000-ZV5-001"], "stupne": ["1. stupeň"]},
+  {"den": "2026-11-10", "nazev": "Výroba létajících draků", "ucitel": "Vojtěch Pažourek", "bloky": ["Kultura", "Podnikavost a práce"], "kody": ["UAK-VFV-001-ZV5-001", "CSP-TCH-001-ZV5-001", "CSP-TCH-001-ZV9-001"], "stupne": ["1. stupeň", "2. stupeň"]},
+  {"den": "2026-11-10", "nazev": "Zpěv s doprovodem ukulele", "ucitel": "Jitka Švengrová Breindlová", "popis": "Cíl: Žák zpívá společně s ostatními, rozvíjí hudební sluch, rytmus a jistotu při zpěvu. Aktivita: Žáci společně zpívají známé i nové písně za doprovodu učitelky na ukulele. Procvičují melodii, rytmus a správné nástupy při společném zpěvu.", "bloky": ["Kultura"], "kody": ["UAK-HTD-001-ZV5-001", "UAK-HTD-001-ZV9-002"], "stupne": ["1. stupeň", "2. stupeň"]},
+  {"den": "2026-11-10", "nazev": "Šicí dílna", "ucitel": "Jana Čudová", "popis": "Žáci pokračují v tvorbě látkových čelenek pomocí šicího stroje Overlock.", "bloky": ["Podnikavost a práce"], "kody": ["CSP-TCH-001-ZV5-001", "CSP-TCH-001-ZV9-002"], "stupne": ["1. stupeň", "2. stupeň"]},
+  {"den": "2026-11-11", "nazev": "Barevná kouzla pH", "ucitel": "Petra Divišová", "popis": "Žáci se seznámí s kyselinami, zásadami a stupnicí pH. Pomocí přírodního indikátoru z červeného zelí budou zkoumat běžné látky z domácnosti, porovnávat jejich vlastnosti a vyhodnocovat výsledky pokusů. Rozvíjejí tak chemické myšlení, badatelské dovednosti a zásady bezpečné práce.", "bloky": ["Podnikavost a práce", "Řešení problémů"], "kody": ["CAP-CHE-001-ZV9-004", "CAP-CHE-001-ZV9-005", "CAP-CHE-003-ZV9-011"], "stupne": ["2. stupeň"]},
+  {"den": "2026-11-11", "nazev": "Patronské schůzky - sebehodnocení", "ucitel": "Petra Divišová", "popis": "Bipartita – individuální rozhovor se žákem. Žák reflektuje své dosavadní učení, pojmenovává, co ho baví, co mu vyhovuje a co ne, sdílí své zájmy a potřeby a společně plánujeme jeho další zaměření a cíle.", "bloky": ["Učení a sebeřízení"], "kody": ["SBŘ-DČD-001-SŘ3-002", "SBŘ-DČD-001-SŘ3-003", "SBŘ-DČD-001-SŘ3-004"], "stupne": ["1. stupeň"]},
+  {"den": "2026-11-11", "nazev": "Počítání do 20, do 100 a do 1000", "ucitel": "Lucie Gregorová", "bloky": ["Řešení problémů"], "kody": ["MAT-MAT-001-ZV5-001"], "stupne": ["1. stupeň"]},
+  {"den": "2026-11-11", "nazev": "Přijede Martin na bílém koni?", "ucitel": "Martina Prchalová", "popis": "Tvoření obrázků a záložek se zimní a vánoční tematikou pomocí inkoustu a zmizíku.", "bloky": ["Kultura"], "kody": ["KKT-UMK-000-ZV5-001"], "stupne": ["1. stupeň"]},
+  {"den": "2026-11-11", "nazev": "Školní plavání - bazén Kolín (1.st.)", "ucitel": "Michala Plšková", "popis": "Plavání podporuje tělesnou zdatnost, překonávání námahy a fyzické obtíží spojené se zátěží. Žáci se učí zvládat fyzické výzvy v bazénu a budují vztah k pravidelné tělesné aktivitě, což vede k duševní i sociální pohodě.", "bloky": ["Osobnost a vztahy"], "kody": ["CZB-TEV-001-ZV5-003"], "stupne": ["1. stupeň"]},
+  {"den": "2026-11-11", "nazev": "Školní plavání - bazén Kolín (2.st.)", "ucitel": "Michala Plšková", "popis": "Plavání je vhodným prostředkem pro zlepšení tělesné zdatnosti a duševní pohody. Žáci se učí postupy pro překonávání fyzické námahy a využívají plavání jako cestu k osobnímu rozvoji a健ému životnímu stylu.", "bloky": ["Osobnost a vztahy"], "kody": ["CZB-TEV-001-ZV9-003"], "stupne": ["2. stupeň"]},
+  {"den": "2026-11-12", "nazev": "Angličtina - Clothes: I like / I don't like", "ucitel": "Petra Divišová", "popis": "Žáci si rozšíří a upevní anglickou slovní zásobu na téma oblečení. Pomocí papírových panenek a vystřihovacího oblečení budou pojmenovávat jednotlivé kusy oděvu, vybírat a kombinovat vlastní outfity a vyjadřovat své preference pomocí jednoduchých vět „I like…“ a „I don't like…“. Procvičí si také barvy a jednoduchou konverzaci v angličtině.", "bloky": ["Komunikace"], "kody": ["JJK-AJA-001-ZV5-001", "JJK-AJA-002-ZV5-003", "JJK-AJA-003-ZV5-005"], "stupne": ["1. stupeň"]},
+  {"den": "2026-11-12", "nazev": "Nákupní výzva: Jak vyjít s rozpočtem?", "ucitel": "Petra Divišová", "popis": "Žáci budou plánovat fiktivní nákup podle nabídky obchodního letáku a stanoveného rozpočtu. Vyberou si zboží, sestaví nákupní seznam, vypočítají celkovou cenu a ověří, zda se do přidělené částky vejdou. Procvičí si tak praktické využití matematiky při rozhodování, plánování a hospodaření s penězi.", "bloky": ["Čtvrtek odpoledne", "Řešení problémů"], "kody": ["ZGM-MOD-000-ZV3-001", "ZGM-MUV-000-ZV3-001", "ZGM-POM-000-ZV3-001"], "stupne": ["1. stupeň"]},
+  {"den": "2026-11-12", "nazev": "Významné ženy ve světě mužů", "ucitel": "Martina Prchalová", "popis": "Žáci se seznámí s příběhy 4 významných žen, které se prosadily v době a oboru, kde dominovali muži. V diskuzi se zamýšlí nad tím, jak náročné to pro ně bylo, jak a jestli se postupně vnímání žen a jejich role proměňuje.", "bloky": ["Čtvrtek odpoledne", "Kultura"], "kody": ["CAS-DEJ-001-ZV9-011"], "stupne": ["2. stupeň"]},
+  {"den": "2026-11-12", "nazev": "Český jazyk – příprava na přijímací zkoušky", "ucitel": "Petra Divišová", "popis": "Žáci si procvičí učivo českého jazyka prostřednictvím přijímacích testů z předchozího roku. Budou řešit úlohy zaměřené na pravopis, gramatiku, skladbu a porozumění textu, společně rozebírat správná řešení a upevňovat si znalosti potřebné k přijímacím zkouškám.", "bloky": ["Komunikace"], "kody": ["JJK-CJL-001-ZV9-003", "JJK-CJL-001-ZV9-005", "JJK-CJL-001-ZV9-007"], "stupne": ["2. stupeň"]},
+  {"den": "2026-11-13", "nazev": "Basketbal", "ucitel": "Zdeněk Fišer", "popis": "přesnost střelby (trénování hodů na koš )", "bloky": ["Digitální svět"], "kody": ["CZB-TEV-002-ZV5-008"], "stupne": ["1. stupeň"]},
+  {"den": "2026-11-13", "nazev": "Canva Design Challenge: Vytvoř vlastní logo", "ucitel": "Jitka Švengrová Breindlová", "popis": "Cíl: Žák navrhne vlastní logo, které pomocí barev, tvarů, symbolů a textu vystihuje identitu vybrané značky. Aktivita: Žáci si vymyslí vlastní značku (např. oblečení, kavárnu, herní studio, sportovní klub, obchod nebo značku vlastního produktu). Rozhodnou, jak se značka jmenuje, co nabízí a pro koho je určena.", "bloky": ["Digitální svět"], "kody": ["KDI-TDO-000-ZV5-001", "KDI-TDO-000-ZV9-001"], "stupne": ["1. stupeň", "2. stupeň"]},
+  {"den": "2026-11-13", "nazev": "Historie peněz - JSNS", "ucitel": "Jitka Švengrová Breindlová", "popis": "Cíle: Žáci se seznámí s historií peněz, pochopí jejich význam a funkci a porovnají způsoby placení v minulosti a současnosti. Aktivita: Žáci zhlédnou animované video o vývoji placení od směnného obchodu přes první mince až po dnešní platby kartou a mobilem. Na konkrétních příkladech poznávají, jak se měnilo placení za zboží a služby a jakou roli dnes mají peníze a banky.", "bloky": ["Občanství a udržitelnost", "Podnikavost a práce"], "kody": ["CJS-CJS-003-ZV5-013", "CJS-CJS-006-ZV5-033"], "stupne": ["1. stupeň"]},
+  {"den": "2026-11-13", "nazev": "Laskavost", "ucitel": "Jitka Švengrová Breindlová", "popis": "Cíl: Žák si uvědomuje význam laskavosti v mezilidských vztazích a dokáže rozpoznat situace, ve kterých může druhým pomoci nebo jim udělat radost. Aktivita: Společně si povídáme o tom, co znamená být laskavý, a uvádíme konkrétní příklady laskavých skutků. Každý žák se pokusí během dne udělat alespoň jeden dobrý skutek, aniž by očekával pochvalu nebo odměnu.", "bloky": ["Občanství a udržitelnost", "Osobnost a vztahy"], "kody": ["KOS-EMP-000-ZV5-001", "CSP-OSV-002-ZV9-009"], "stupne": ["1. stupeň", "2. stupeň"]},
+  {"den": "2026-11-13", "nazev": "Od loga k výrobku: Vlastní značka v praxi", "ucitel": "Jitka Švengrová Breindlová", "popis": "Cíl: Žák realizuje vlastní tvůrčí záměr a propojí digitální návrh s ruční výrobou. Aktivita: Žáci navážou na předchozí lekci a využijí vytvořené logo při návrhu a výrobě vlastního předmětu. Vyberou vhodný materiál a způsob zpracování a vytvoří například látkovou tašku, penál, tričko, hrnek, podtácek, odznak, přívěsek nebo obal na zápisník. Své logo na výrobek přenesou podle dostupných možností (tisk, vystřižení, překreslení, malování či nalepení). Na závěr představí hotový výrobek a svou značku ostatním.", "bloky": ["Občanství a udržitelnost"], "kody": ["KOS-SEB-000-ZV5-001", "KOS-SEB-000-ZV9-001"], "stupne": ["1. stupeň", "2. stupeň"]},
+  {"den": "2026-11-13", "nazev": "Tvorba webové hry", "ucitel": "Zdeněk Fišer", "popis": "Založení společné hry pro více hráčů. Optimalizace práce s daty pomocí AI a realizace vlastních nápadů", "bloky": ["Digitální svět"], "kody": ["INF-INF-001-ZV5-002"], "stupne": ["1. stupeň"]},
+  {"den": "2026-11-13", "nazev": "Základní funkce a grafy", "ucitel": "Zdeněk Fišer", "popis": "Lineární funkce, Exponenciální funkce a zápis", "bloky": ["Řešení problémů"], "kody": ["MAT-MAT-005-ZV9-019"], "stupne": ["2. stupeň"]}
+];
 </script>
 <style>
 :root{
@@ -107,6 +131,18 @@ input.name:focus{border-color:var(--r5)}
 .empty{color:var(--muted);text-align:center;padding:24px 6px;font-size:15px}
 .empty .e{font-size:30px;display:block}
 
+.nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:20px}
+.nav .arrow{border:0;background:#fff;border-radius:14px;padding:10px 14px;font-weight:900;font-size:18px;box-shadow:var(--shadow)}
+.nav .arrow:disabled{opacity:.35;cursor:default}
+.nav .wk{font-size:20px;font-weight:900;padding:0 6px;min-width:190px;text-align:center}
+.nav .spacer{flex:1}
+.seg{display:flex;background:#fff;border-radius:999px;padding:4px;box-shadow:var(--shadow)}
+.seg button{border:0;background:transparent;border-radius:999px;padding:8px 14px;font-weight:900;color:var(--muted)}
+.seg button.on{background:var(--ink);color:#fff}
+.lesson .lvl{display:inline-block;font-size:11px;background:#f4f1fa;color:var(--muted);border-radius:999px;padding:1px 8px;margin-top:6px;margin-right:4px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.tagc{font-size:12px;font-weight:900;border-radius:999px;padding:3px 10px;color:#fff;background:var(--c)}
+
 /* ---------- přání ---------- */
 .wish{margin-top:30px;background:var(--card);border-radius:30px;box-shadow:var(--shadow);padding:24px;position:relative;overflow:hidden}
 .wish:before{content:"";position:absolute;inset:0 0 auto 0;height:8px;background:linear-gradient(90deg,var(--r1),var(--r2),var(--r3),var(--r4),var(--r5),var(--r6))}
@@ -125,7 +161,7 @@ textarea:focus{border-color:var(--r5)}
 
 /* ---------- modal ---------- */
 .modalBg{position:fixed;inset:0;background:rgba(43,35,64,.45);display:flex;align-items:center;justify-content:center;padding:18px;z-index:50}
-.modal{background:#fff;border-radius:28px;max-width:520px;width:100%;padding:26px;border-top:12px solid var(--c);box-shadow:0 20px 60px rgba(0,0,0,.25);animation:pop .18s ease-out}
+.modal{background:#fff;border-radius:28px;max-width:560px;width:100%;max-height:88vh;overflow:auto;padding:26px;border-top:12px solid var(--c);box-shadow:0 20px 60px rgba(0,0,0,.25);animation:pop .18s ease-out}
 @keyframes pop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
 .modal h3{font-size:26px;margin:6px 0 12px;font-weight:900;line-height:1.15}
 .modal .meta{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;color:var(--muted)}
@@ -215,6 +251,16 @@ h2.sec{font-size:24px;font-weight:900;margin:28px 0 12px}
 
   <!-- ============ HLAVNÍ: týden + přání ============ -->
   <main id="mainView" class="hidden">
+    <div class="nav">
+      <button class="arrow hidden" id="prevW" aria-label="předchozí týden">←</button>
+      <div class="wk hidden" id="wkLbl"></div>
+      <button class="arrow hidden" id="nextW" aria-label="další týden">→</button>
+      <button class="btn ghost" id="todayW">Tento týden</button>
+      <span class="spacer"></span>
+      <div class="seg" id="lvlSeg">
+        <button data-l="">Vše</button><button data-l="1. stupeň">1. stupeň</button><button data-l="2. stupeň">2. stupeň</button>
+      </div>
+    </div>
     <div class="days" id="days"></div>
 
     <section class="wish">
@@ -285,7 +331,8 @@ function ago(t){
   const d = Math.round(h / 24);
   return d === 1 ? "včera" : "před " + d + " dny";
 }
-const BLOK_BARVY = { "Digitální svět": "#3fa7ff", "Čtvrtek odpoledne": "#ff9f40" };
+const BLOK_BARVY = { "Čtvrtek odpoledne":"#ff9f40", "Digitální svět":"#3fa7ff", "Komunikace":"#ec4899", "Kultura":"#8b5cf6",
+  "Občanství a udržitelnost":"#22b07d", "Osobnost a vztahy":"#ff5d5d", "Podnikavost a práce":"#d99a00", "Řešení problémů":"#0ea5b7", "Učení a sebeřízení":"#6366f1" };
 const EXTRA = ["#8b5cf6","#3ecf8e","#ff5d5d","#e6b800","#ec4899"];
 function blokBarva(b){
   if (BLOK_BARVY[b]) return BLOK_BARVY[b];
@@ -428,41 +475,62 @@ function showEnter(editing){
 }
 
 /* ===================== týden ===================== */
+const iso = d => d.toLocaleDateString("sv-SE");
+function mondayOf(d){ const x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); const wd = (x.getDay() + 6) % 7; x.setDate(x.getDate() - wd); return x }
+function startWeek(){ const t = new Date(); const m = mondayOf(t); if (t.getDay() === 0 || t.getDay() === 6) m.setDate(m.getDate() + 7); return m }
+const ALL = (typeof LEKCE !== "undefined" ? LEKCE : []).map((l,i) => ({ ...l, i, bloky: l.bloky || [], kody: l.kody || [], stupne: l.stupne || [] }));
+const minW = ALL.length ? mondayOf(parseD(ALL[0].den)) : startWeek();
+const maxW = ALL.length ? mondayOf(parseD(ALL[ALL.length-1].den)) : startWeek();
+let wk = ALL.length ? mondayOf(parseD(ALL[0].den)) : startWeek();
+let lvl = store.get("erazim_stupen", "");
+
 function renderWeek(){
-  const od = parseD(TYDEN.od), doo = parseD(TYDEN.do);
-  $("weekLbl").textContent = `${fmtD(od)} – ${fmtD(doo)}${doo.getFullYear()}`;
-  const todayKey = new Date().toLocaleDateString("sv-SE");
+  const fri = new Date(wk); fri.setDate(fri.getDate() + 4);
+  const lbl = `${fmtD(wk)} – ${fmtD(fri)}${fri.getFullYear()}`;
+  $("weekLbl").textContent = "Týden " + lbl;
+  $("wkLbl").textContent = lbl;
+  $("prevW").disabled = wk <= minW && wk <= startWeek();
+  $("nextW").disabled = wk >= maxW && wk >= startWeek();
+  $("todayW").classList.add("hidden");
+  [...$("lvlSeg").children].forEach(b => b.classList.toggle("on", b.dataset.l === lvl));
+  const todayKey = iso(new Date());
   let html = "";
-  for (let d = new Date(od); d <= doo; d.setDate(d.getDate() + 1)){
-    if (d.getDay() === 0 || d.getDay() === 6) continue;
-    const key = d.toLocaleDateString("sv-SE");
-    const items = TYDEN.lekce.map((l,i) => ({...l, i})).filter(l => l.den === key);
+  for (let k = 0; k < 5; k++){
+    const d = new Date(wk); d.setDate(d.getDate() + k);
+    const key = iso(d);
+    const items = ALL.filter(l => l.den === key && (!lvl || l.stupne.includes(lvl) || !l.stupne.length));
     const today = key === todayKey;
     html += `<div class="day ${today ? "today" : ""}">
       <div class="dayHead"><b>${DNY[d.getDay()]}${today ? '<span class="badge">DNES</span>' : ""}</b><span>${fmtD(d)}</span></div>
       ${items.length ? items.map(l => `
-        <button class="lesson" style="--c:${blokBarva(l.blok)}" data-i="${l.i}">
-          <div class="blk">${esc(l.blok)}</div>
+        <button class="lesson" style="--c:${blokBarva(l.bloky[0] || "")}" data-i="${l.i}">
+          <div class="blk">${esc(l.bloky[0] || "")}</div>
           <div class="t">${esc(l.nazev)}</div>
           <div class="who">${esc(l.ucitel)}</div>
+          ${l.stupne.map(s => `<span class="lvl">${esc(s)}</span>`).join("")}
         </button>`).join("") : `<div class="empty"><span class="e">🌤️</span>Žádná lekce</div>`}
     </div>`;
   }
   $("days").innerHTML = html;
 }
-$("days").onclick = e => { const b = e.target.closest(".lesson"); if (b) openLesson(TYDEN.lekce[+b.dataset.i]) };
+$("prevW").onclick = () => { wk.setDate(wk.getDate() - 7); renderWeek() };
+$("nextW").onclick = () => { wk.setDate(wk.getDate() + 7); renderWeek() };
+$("todayW").onclick = () => { wk = startWeek(); renderWeek() };
+$("lvlSeg").onclick = e => { const b = e.target.closest("[data-l]"); if (b){ lvl = b.dataset.l; store.set("erazim_stupen", lvl); renderWeek() } };
+$("days").onclick = e => { const b = e.target.closest(".lesson"); if (b) openLesson(ALL[+b.dataset.i]) };
 function openLesson(l){
-  const d = parseD(l.den);
-  $("modal").style.setProperty("--c", blokBarva(l.blok));
+  const d = parseD(l.den), c = blokBarva(l.bloky[0] || "");
+  $("modal").style.setProperty("--c", c);
   $("modal").innerHTML = `
-    <div class="lesson" style="box-shadow:none;padding:0;margin:0;border:0;--c:${blokBarva(l.blok)}"><div class="blk">${esc(l.blok)}</div></div>
+    <div class="tags">${l.bloky.map(b => `<span class="tagc" style="--c:${blokBarva(b)}">${esc(b)}</span>`).join("")}</div>
     <h3>${esc(l.nazev)}</h3>
     <div class="meta">
       <span>Kdy</span><b>${DNY_DL[d.getDay()]} ${fmtD(d)}</b>
       <span>Kdo učí</span><b>${esc(l.ucitel)}</b>
+      ${l.stupne.length ? `<span>Pro</span><b>${esc(l.stupne.join(" a "))}</b>` : ""}
     </div>
     ${l.popis ? `<p class="desc">${esc(l.popis)}</p>` : ""}
-    <div class="codes">${(l.kody||[]).map(k => `<span class="code">${esc(k)}</span>`).join("")}</div>
+    <div class="codes">${l.kody.map(k => `<span class="code">${esc(k)}</span>`).join("")}</div>
     <div style="text-align:right;margin-top:18px"><button class="btn" id="closeM">Zavřít</button></div>`;
   $("modalBg").classList.remove("hidden");
   $("closeM").onclick = closeModal;
